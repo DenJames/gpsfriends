@@ -15,20 +15,29 @@
         </div>
     </div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function (event) {
-            const x = document.getElementById("demo");
+    @push('scripts')
+        <script>
+            document.addEventListener("DOMContentLoaded", function (event) {
+                setInterval(() => {
+                    console.log("test")
+                    fetchLocation();
+                }, 5000)
 
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(showPosition);
-            } else {
-                x.innerHTML = "Geolocation is not supported by this browser.";
-            }
+                function fetchLocation() {
+                    const x = document.getElementById("demo");
 
-            function showPosition(position) {
-                x.innerHTML = "Longtitude: " + position.coords.longitude +
-                    "<br>Latitude: " + position.coords.latitude;
-            }
-        });
-    </script>
+                    if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(showPosition);
+                    } else {
+                        x.innerHTML = "Geolocation is not supported by this browser.";
+                    }
+
+                    function showPosition(position) {
+                        x.innerHTML = "Longtitude: " + position.coords.longitude +
+                            "<br>Latitude: " + position.coords.latitude;
+                    }
+                }
+            });
+        </script>
+    @endpush
 </x-app-layout>
