@@ -17,7 +17,7 @@
 
     @push('scripts')
         <script>
-            document.addEventListener("DOMContentLoaded", function (event) {
+            $(document).ready(function() {
                 const x = document.getElementById("demo");
 
                 setInterval(() => {
@@ -40,19 +40,43 @@
                         longitude: position.coords.longitude,
                     }
 
-                    showLocation(coords);
+                    pushCoordsToDatabase(coords);
+
                     showLocation(coords);
 
                     return coords;
                 }
 
-                function showLocation(coords) {
-                    x.innerHTML = "Latitude: " + coords.latitude +
-                        "<br>Longitude: " + coords.longitude;
+                function showLocation(users) {
+                    x.innerHTML = '';
+
+                    users.forEach((user) => {
+                        if (user.name === '{{ auth()->user()->name }}') {
+                            user.thisIsMe = true;
+                            x.innerHTML += `Latitude: ${user.latitude} <br> Longitude: ${user.longitude} <br><br>`
+                        }
+
+                        setTimeout(() => {
+                            x.innerHTML += JSON.stringify(user) + "<br>"
+                        }, 100);
+                    });
                 }
 
                 function pushCoordsToDatabase(coords) {
-
+                    $.ajax({
+                        url: '{{ route('location.store') }}',
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        data: coords,
+                        success: function(response) {
+                            showLocation(Object.values(response));
+                        },
+                        error: function(response) {
+                            console.log(response)
+                        }
+                    });
                 }
             });
         </script>
