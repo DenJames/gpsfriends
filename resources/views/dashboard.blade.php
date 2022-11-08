@@ -18,24 +18,41 @@
     @push('scripts')
         <script>
             document.addEventListener("DOMContentLoaded", function (event) {
+                const x = document.getElementById("demo");
+
                 setInterval(() => {
-                    console.log("test")
-                    fetchLocation();
+                    fetchCoords();
                 }, 5000)
 
-                function fetchLocation() {
-                    const x = document.getElementById("demo");
-
-                    if (navigator.geolocation) {
-                        navigator.geolocation.getCurrentPosition(showPosition);
-                    } else {
+                function fetchCoords() {
+                    if (!navigator.geolocation) {
                         x.innerHTML = "Geolocation is not supported by this browser.";
+
+                        return;
                     }
 
-                    function showPosition(position) {
-                        x.innerHTML = "Longtitude: " + position.coords.longitude +
-                            "<br>Latitude: " + position.coords.latitude;
+                    navigator.geolocation.getCurrentPosition(fetchPosition);
+                }
+
+                function fetchPosition(position) {
+                    const coords = {
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
                     }
+
+                    showLocation(coords);
+                    showLocation(coords);
+
+                    return coords;
+                }
+
+                function showLocation(coords) {
+                    x.innerHTML = "Latitude: " + coords.latitude +
+                        "<br>Longitude: " + coords.longitude;
+                }
+
+                function pushCoordsToDatabase(coords) {
+
                 }
             });
         </script>
