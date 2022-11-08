@@ -19,6 +19,11 @@
         $.post('/dashboard',
             {
                 '_token': $('meta[name=csrf-token]').attr('content'),
+                task: 'comment_insert',
+                userID: _userID,
+                comment: _comment,
+                name: _name,
+                userName: _userName
             })
             .error(() => {
                 console.log('error')
