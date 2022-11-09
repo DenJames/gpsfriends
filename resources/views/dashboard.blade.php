@@ -80,6 +80,8 @@
 
         <script>
             $(document).ready(function() {
+                fetchCoords(); // Used to fetch the coords first time around
+
                 const x = document.getElementById("demo");
 
                 setInterval(() => {
