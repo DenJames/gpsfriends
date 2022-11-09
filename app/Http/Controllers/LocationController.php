@@ -18,6 +18,11 @@ class LocationController extends Controller
             $user->update($request->validated());
         }
 
-        return response(UserResource::collection(User::query()->select(['id', 'name', 'latitude', 'longitude'])->get()));
+        return response(UserResource::collection(
+            User::query()
+                ->select(['id', 'name', 'latitude', 'longitude'])
+                ->where('connected', '=', true)
+                ->get()
+        ));
     }
 }

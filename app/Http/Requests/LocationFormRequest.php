@@ -13,9 +13,4 @@ class LocationFormRequest extends FormRequest
             'longitude' => ['required'],
         ];
     }
-
-    public function authorize()
-    {
-        return true;
-    }
 }

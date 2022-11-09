@@ -53,6 +53,10 @@ class LoginRequest extends FormRequest
             ]);
         }
 
+        Auth::user()->update([
+            'connected' => true,
+        ]);
+
         RateLimiter::clear($this->throttleKey());
     }
 
