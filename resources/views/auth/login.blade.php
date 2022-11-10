@@ -6,10 +6,19 @@
             </a>
         </x-slot>
 
+        <div class="text-sm">
+            Applikationen bruger websockets, ønsker du at se det "live" så login med de pre-udfyldte informationer også åben siden i en anden browser og brug:<br>
+
+            <div class="mt-2 p-2 rounded bg-gray-100">
+                Email: demo2@example.com <br>
+                Password: password
+            </div>
+        </div>
+
         <!-- Session Status -->
         <x-auth-session-status class="mb-4" :status="session('status')" />
 
-        <form method="POST" action="{{ route('login') }}">
+        <form method="POST" action="{{ route('login') }}" class="mt-6">
             @csrf
 
             <!-- Email Address -->
@@ -17,7 +26,6 @@
                 <x-input-label for="email" :value="__('Email')" />
 
                 <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" value="demo@example.com" required autofocus />
-
                 <x-input-error :messages="$errors->get('email')" class="mt-2" />
             </div>
 
