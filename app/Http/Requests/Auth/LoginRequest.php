@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Events\UserAuthenticatedEvent;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
@@ -53,9 +54,7 @@ class LoginRequest extends FormRequest
             ]);
         }
 
-        Auth::user()->update([
-            'connected' => true,
-        ]);
+        UserAuthenticatedEvent::dispatch(Auth::user());
 
         RateLimiter::clear($this->throttleKey());
     }
