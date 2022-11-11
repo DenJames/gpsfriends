@@ -1,16 +1,4 @@
 <x-app-layout>
-    <style>
-        .pointer {
-            width: 10px; height: 10px; background-color: red;
-            top: 0;
-            left: 0;
-            position: absolute;
-            border-radius: 100%;
-            color: transparent;
-            border: 3px solid red;
-        }
-    </style>
-
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Dashboard') }}
@@ -20,6 +8,9 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-4">
             <div class="p-6 bg-white border-b border-gray-200 mt-4">
+                My current latitude & longitude:
+                <p id="currentLocation"></p>
+
                 <canvas id="locationCanvas" class="bg-yellow-500"></canvas>
 
                 <input type="range" id="scaleCanvas" class="w-full mt-4">
@@ -48,9 +39,15 @@
                 }
 
                 function fetchPosition(position) {
+                    const x = position.coords.latitude;
+                    const y = position.coords.longitude;
+
+                    const el = document.getElementById('currentLocation');
+                    el.innerHTML = `Latitude: ${x} <br> Longitude: ${y}`;
+
                     pushCoordsToDatabase({
-                        latitude: position.coords.latitude,
-                        longitude: position.coords.longitude,
+                        latitude: x,
+                        longitude: y,
                     });
                 }
 

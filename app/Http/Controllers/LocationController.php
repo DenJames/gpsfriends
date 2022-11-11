@@ -13,7 +13,7 @@ class LocationController extends Controller
     public function store(LocationFormRequest $request)
     {
         $user = $request->user();
-        
+
         if ($user->latitude != $request->input('latitude') || $user->longitude != $request->input('longitude')) {
             $user->update($request->validated());
         }
