@@ -61,8 +61,6 @@
                 const canvas = c.getContext("2d");
                 canvas.beginPath();
 
-                setCanvasEntries()
-
                 async function setCanvasEntries() {
                     // Clear the canvas
                     canvas.clearRect(0, 0, c.width, c.height);

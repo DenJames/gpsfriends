@@ -7,13 +7,48 @@
         </x-slot>
 
         <div class="text-sm">
-            Applikationen bruger websockets, ønsker du at se det "live" så login med de pre-udfyldte informationer også åben siden i en anden browser og brug:<br>
+            Applikationen bruger websockets, ønsker du at se det "live" så login med de pre-udfyldte informationer også åben siden i en anden browser og brug en eller flere af følgende brugere:<br>
 
             <div class="mt-2 p-2 rounded bg-gray-100">
-                Email: demo2@example.com <br>
-                Password: password
+                <div class="flex justify-between">
+                    <div class="flex gap-x-1">
+                        <p id="demo2">
+                            demo2@example.com
+                        </p>
+                    </div>
+
+                    <button onclick="useAnotherAccount('demo2')" class="text-blue-600 cursor-pointer text-sm hover:underline hover:text-blue-800">Brug</button>
+                </div>
+
+                <div class="flex justify-between">
+                    <div class="flex gap-x-1">
+                        <p id="demo3">
+                            demo3@example.com
+                        </p>
+                    </div>
+
+                    <button onclick="useAnotherAccount('demo3')" class="text-blue-600 cursor-pointer text-sm hover:underline hover:text-blue-800">Brug</button>
+                </div>
+
+                <div class="flex justify-between">
+                    <div class="flex gap-x-1">
+                        <p id="demo4">
+                            demo4@example.com
+                        </p>
+                    </div>
+
+                    <button onclick="useAnotherAccount('demo4')" class="text-blue-600 cursor-pointer text-sm hover:underline hover:text-blue-800">Brug</button>
+                </div>
             </div>
         </div>
+
+        <script>
+            function useAnotherAccount(accountId) {
+                const el = document.getElementById(accountId);
+
+                document.getElementById('email').value = el.innerHTML;
+            }
+        </script>
 
         <!-- Session Status -->
         <x-auth-session-status class="mb-4" :status="session('status')" />
