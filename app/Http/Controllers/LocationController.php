@@ -14,9 +14,7 @@ class LocationController extends Controller
     {
         $user = $request->user();
 
-        if ($user->latitude != $request->input('latitude') || $user->longitude != $request->input('longitude')) {
-            $user->update($request->validated());
-        }
+        $user->update($request->validated());
 
         return $this->fetchUsers();
     }
