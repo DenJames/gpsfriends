@@ -18,6 +18,11 @@ class LocationController extends Controller
             $user->update($request->validated());
         }
 
+        return $this->fetchUsers();
+    }
+
+    public function fetchUsers()
+    {
         return response(UserResource::collection(
             User::query()
                 ->select(['id', 'name', 'latitude', 'longitude'])

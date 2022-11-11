@@ -25,6 +25,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->middleware(['auth', 'verified'])->name('dashboard');
 
     Route::post('/location/store', [LocationController::class, 'store'])->name('location.store');
+    Route::get('/fetch/users', [LocationController::class, 'fetchUsers'])->name('fetch.users');
 });
 
 
