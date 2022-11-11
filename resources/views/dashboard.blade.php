@@ -11,7 +11,7 @@
                 My current latitude & longitude:
                 <p id="currentLocation"></p>
 
-                <canvas id="locationCanvas" class="bg-yellow-500"></canvas>
+                <canvas id="locationCanvas" class="w-full bg-yellow-500"></canvas>
 
                 <input type="range" id="scaleCanvas" class="w-full mt-4">
             </div>
@@ -55,7 +55,8 @@
                 const c = document.getElementById("locationCanvas");
 
                 // Set the canvas size
-                c.width = 1170
+                const content = document.getElementById('locationCanvas');
+                c.width = content.offsetWidth
                 c.height = 600
 
                 const canvas = c.getContext("2d");
