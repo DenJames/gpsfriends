@@ -1,5 +1,5 @@
 <x-app-layout>
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-4">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-4 pb-6">
             <div class="p-6 bg-white border-b border-gray-200 mt-4">
                 My current latitude & longitude:
                 <p id="currentLocation"></p>
@@ -11,10 +11,14 @@
 
             {{-- Chat area --}}
             <div class="p-6 bg-white border-b border-gray-200 mt-4">
+                <h2 class="text-2xl mb-4">Chat</h2>
                 <div class="flex flex-col gap-3">
-                    <select name="chat_user" id="chatUsers" class="border border-gray-200 rounded-md w-full">
-                        <option value="">None</option>
-                    </select>
+                    <div class="flex flex-col">
+                        <label for="chatUsers">Select user to chat with</label>
+                        <select name="chat_user" id="chatUsers" class="border border-gray-200 rounded-md w-full">
+                            <option value="">None</option>
+                        </select>
+                    </div>
 
                     <div id="chatArea" class="flex flex-col space-y-4">
                         <div id="chatContainer" class="max-h-[320px] overflow-y-scroll"></div>
