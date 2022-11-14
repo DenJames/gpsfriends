@@ -34,7 +34,7 @@ class UserLogoutEvent implements ShouldBroadcast
     public function broadcastWith()
     {
         return [
-            'data' => $this->user->first(['name', 'latitude', 'longitude']),
+            'data' => $this->user->first(['id', 'name', 'latitude', 'longitude']),
         ];
     }
 }

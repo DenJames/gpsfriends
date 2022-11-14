@@ -2,38 +2,35 @@
 
 namespace App\Events;
 
-use App\Models\User;
+use App\Models\Message;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class UserAuthenticatedEvent implements ShouldBroadcast
+class MessageSentEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public function __construct(public User $user)
+    public function __construct(public $message)
     {
-        $this->user->update([
-            'connected' => true,
-        ]);
     }
 
     public function broadcastOn()
     {
-        return new Channel('userAuthenticated');
+        return new Channel('messageSent');
     }
 
     public function broadcastAs()
     {
-        return 'user.authenticated';
+        return 'message.sent';
     }
 
     public function broadcastWith()
     {
         return [
-            'data' => $this->user->first(['id', 'name', 'latitude', 'longitude']),
+            'data' => $this->message->load('sender', 'receiver'),
         ];
     }
 }

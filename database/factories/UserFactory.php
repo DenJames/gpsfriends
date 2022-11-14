@@ -25,6 +25,7 @@ class UserFactory extends Factory
             'password' => Hash::make('password'),
             'latitude' => fake()->latitude(),
             'longitude' => fake()->longitude(),
+            'profile_picture_url' => fake()->imageUrl(100, 100, 'people'),
             'remember_token' => Str::random(10),
         ];
     }

@@ -8,7 +8,7 @@ return new class extends Migration {
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->boolean('connected')->after('latitude');
+            $table->boolean('connected')->after('latitude')->default(false);
         });
     }
 

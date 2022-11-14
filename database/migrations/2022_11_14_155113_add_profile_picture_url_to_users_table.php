@@ -8,15 +8,14 @@ return new class extends Migration {
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->double('latitude', 12, 7)->nullable()->after('password');
-            $table->double('longitude', 12, 7)->nullable()->after('latitude');
+            $table->string('profile_picture_url')->nullable()->after('connected');
         });
     }
 
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            //
+            $table->dropColumn('profile_picture_url');
         });
     }
 };

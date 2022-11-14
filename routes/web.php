@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\LocationController;
+use App\Http\Controllers\MessageController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,6 +27,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::post('/location/store', [LocationController::class, 'store'])->name('location.store');
     Route::get('/fetch/users', [LocationController::class, 'fetchUsers'])->name('fetch.users');
+
+    Route::post('/message/send', [MessageController::class, 'store'])->name('message.store');
+    Route::post('/messages/fetch', [MessageController::class, 'fetch'])->name('messages.fetch');
 });
 
 
