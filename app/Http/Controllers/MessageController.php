@@ -15,16 +15,11 @@ class MessageController extends Controller
 
         MessageSentEvent::dispatch($message);
 
-        return response($message);
+        return true;
     }
 
     public function fetch(Request $request)
     {
-        // Fetch all messages between the authenticated user and the user with the given ID without using Eloquent relationships
-
-        // Fetch all messages from the receiver_id but only the messages that also belongs to the authenticated user
-
-
         $messages = Message::query()
             ->where(function ($query) use ($request) {
                 $query->where('sender_id', $request->user()->id)
@@ -39,10 +34,4 @@ class MessageController extends Controller
 
         return response($messages);
     }
-//    {
-//
-//
-//
-////        UserAuthenticatedEvent::dispatch(Auth::user());
-//    }
 }
