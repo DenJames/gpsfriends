@@ -27,6 +27,7 @@ class LocationController extends Controller
             User::query()
                 ->select(['id', 'name', 'latitude', 'longitude'])
                 ->where('connected', '=', true)
+                ->orderByRaw('SQRT(POW(69.1 * (latitude - ?), 2) + POW(69.1 * (? - longitude) * COS(latitude / 57.3), 2))', [auth()->user()->latitude, auth()->user()->longitude])
                 ->get()
         ));
     }

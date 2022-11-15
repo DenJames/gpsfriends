@@ -1,45 +1,48 @@
 <x-app-layout>
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-4 pb-6">
-            <div class="p-6 bg-white border-b border-gray-200 mt-4">
-                My current latitude & longitude:
-                <p id="currentLocation"></p>
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-4 pb-6">
+        <div class="p-6 bg-white border-b border-gray-200 mt-4">
+            My current latitude & longitude:
+            <p id="currentLocation"></p>
 
-                <canvas id="locationCanvas" class="w-full border rounded-md bg-gray-100"></canvas>
+            <canvas id="locationCanvas" class="w-full border rounded-md bg-gray-100"></canvas>
 
-                <input type="range" id="scaleCanvas" min="0.3" max="8" class="w-full mt-4">
-            </div>
+            <input type="range" id="scaleCanvas" min="0.3" max="8" class="w-full mt-4">
+        </div>
 
-            {{-- Chat area --}}
-            <div class="p-6 bg-white border-b border-gray-200 mt-4">
-                <h2 class="text-2xl mb-4">Chat</h2>
-                <div class="flex flex-col gap-3">
-                    <div class="flex flex-col">
-                        <label for="chatUsers">Select user to chat with</label>
-                        <select name="chat_user" id="chatUsers" class="border border-gray-200 rounded-md w-full">
-                            <option value="">None</option>
-                        </select>
-                    </div>
+        {{-- Chat area --}}
+        <div class="p-6 bg-white border-b border-gray-200 mt-4">
+            <h2 class="text-2xl mb-4">Chat</h2>
+            <div class="flex flex-col gap-3">
+                <div class="flex flex-col">
+                    <label for="chatUsers">Select user to chat with</label>
+                    <select name="chat_user" id="chatUsers" class="border border-gray-200 rounded-md w-full">
+                        <option value="">None</option>
+                    </select>
+                </div>
 
-                    <div id="chatArea" class="flex flex-col space-y-4">
-                        <div id="chatContainer" class="max-h-[320px] overflow-y-scroll"></div>
+                <div id="chatArea" class="flex flex-col space-y-4">
+                    <div id="chatContainer" class="max-h-[320px] overflow-y-scroll"></div>
 
-                        <textarea name="message" id="message" class="border border-gray-200 rounded-md w-full"></textarea>
+                    <textarea name="message" id="message" class="border border-gray-200 rounded-md w-full"></textarea>
 
-                        <button type="submit" id="sendMessage" class="w-full bg-blue-500 hover:bg-blue-600 text-white rounded-md px-4 py-2 flex gap-x-2 justify-center items-center">
-                            Send
+                    <button type="submit" id="sendMessage"
+                            class="w-full bg-blue-500 hover:bg-blue-600 text-white rounded-md px-4 py-2 flex gap-x-2 justify-center items-center">
+                        Send
 
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
-                            </svg>
-                        </button>
-                    </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                             stroke="currentColor" class="w-5 h-5">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"/>
+                        </svg>
+                    </button>
                 </div>
             </div>
         </div>
+    </div>
 
     @push('scripts')
         <script>
-            $(document).ready(function() {
+            $(document).ready(function () {
                 const Toast = Swal.mixin({
                     toast: true,
                     position: 'top-end',
@@ -90,8 +93,7 @@
                 const c = document.getElementById("locationCanvas");
 
                 // Set the canvas size
-                const content = document.getElementById('locationCanvas');
-                c.width = content.offsetWidth
+                c.width = c.offsetWidth
                 c.height = 600
 
                 const canvas = c.getContext("2d");
@@ -105,7 +107,7 @@
 
                     // console.log(num);
 
-                    if(minScale >= num) {
+                    if (minScale >= num) {
                         canvas.scale(0.3, 0.3);
                     } else {
                         canvas.scale(7.3, 7.3);
@@ -121,9 +123,8 @@
                     // Fetch users
                     const users = await fetchUsers();
 
+                    let squarePosY = 10;
                     users.forEach((user) => {
-                        // console.log(user)
-
                         const offsets = latLonToOffsets(user.latitude, user.longitude, c.width, c.height);
 
                         let posX = offsets.x
@@ -142,8 +143,41 @@
 
                         // Draw name
                         canvas.fillText(user.name, posX, posY);
+
+                        if (user.name !== '{{ auth()->user()->name }}') {
+                            canvas.rect(c.width - 170, squarePosY, 150, 50);
+                            canvas.fillText(user.name, c.width - 135, squarePosY + 30);
+                            canvas.stroke();
+
+                            squarePosY += 50;
+                        }
                     });
                 }
+
+                c.addEventListener('click', async function (event) {
+                    const rect = c.getBoundingClientRect();
+                    const x = event.clientX - rect.left;
+                    const y = event.clientY - rect.top;
+
+                    const users = await fetchUsers();
+
+                    // Filter out the current user
+                    const filteredUsers = users.filter((u) => u.name !== '{{ auth()->user()->name }}');
+
+                    let squarePosY = 10;
+                    filteredUsers.forEach((user) => {
+                        if (x >= c.width - 170 && x <= c.width - 20 && y >= squarePosY && y <= squarePosY + 50) {
+                            Toast.fire({
+                                icon: 'info',
+                                title: `You clicked on ${user.name}`
+                            })
+                        }
+
+                        squarePosY += 50;
+                    });
+                });
+
+
 
                 function pushCoordsToDatabase(coords) {
                     $.ajax({
@@ -153,10 +187,10 @@
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
                         data: coords,
-                        success: function() {
+                        success: function () {
                             setCanvasEntries()
                         },
-                        error: function(response) {
+                        error: function (response) {
                             console.log(response)
                         }
                     });
@@ -187,7 +221,7 @@
                         radius * Math.log(Math.tan(Math.PI / 4 + latRad / 2));
                     const y = mapHeight / 2 - verticalOffsetFromEquator;
 
-                    return { x, y };
+                    return {x, y};
                 }
 
                 /**
@@ -250,7 +284,7 @@
                             receiver_id: user,
                             message: message,
                         },
-                        success: function() {
+                        success: function () {
                             document.getElementById('message').value = '';
 
                             // Auto scroll to the bottom of the chatContainer div
@@ -264,7 +298,7 @@
                                 title: 'Message sent!'
                             })
                         },
-                        error: function(response) {
+                        error: function (response) {
                             const error = response.responseJSON.errors.message[0];
                             Toast.fire({
                                 icon: 'error',
@@ -274,12 +308,13 @@
                     });
                 }
 
-               setTimeout(() => {
-                   fetchChats();
-               }, 1000);
+                setTimeout(() => {
+                    fetchChats();
+                }, 1000);
 
                 // Add event listener to check when the select box changes
                 document.getElementById('chatUsers').addEventListener('change', fetchChats);
+
                 function fetchChats() {
                     $.ajax({
                         url: '{{ route('messages.fetch') }}',
@@ -290,7 +325,7 @@
                         data: {
                             receiver_id: document.getElementById('chatUsers').value,
                         },
-                        success: function(response) {
+                        success: function (response) {
                             const chats = response;
 
                             // Clear the chat container
@@ -305,7 +340,7 @@
 
                                 if (chat.sender_id === {{ auth()->user()->id }}) {
                                     div.classList.add('w-full', 'mt-2', 'p-4', 'bg-gray-200', 'rounded-md', 'text-gray-700');
-                                    div.innerHTML += `<div class="w-full flex gap-x-3 justify-end items-center"><span class="w-[94%] break-words">${chat.message}</span><img src="{{ auth()->user()->profile_picture_url }}" alt="Avatar" class="rounded-full w-12"></div>`;
+                                    div.innerHTML += `<div class="w-full flex gap-x-3 justify-end items-center"><p class="w-[94%] break-words">${chat.message}</p><img src="{{ auth()->user()->profile_picture_url }}" alt="Avatar" class="rounded-full w-12"></div>`;
                                     div.innerHTML += `<p class="text-xs text-gray-500 w-full flex justify-start">{{ auth()->user()->name }}</p>`;
                                 } else {
                                     div.classList.add('w-full', 'mt-2', 'p-4', 'bg-gray-200', 'rounded-md', 'text-gray-700');
@@ -317,7 +352,7 @@
                                 document.getElementById('chatContainer').appendChild(div);
                             });
                         },
-                        error: function(response) {
+                        error: function (response) {
                             console.log(response)
                         }
                     });
